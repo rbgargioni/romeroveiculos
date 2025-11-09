@@ -1,5 +1,3 @@
-// ===== script.js =====
-
 // Variáveis globais para o carrossel
 let imagemAtual = 0;
 let imagensAtuais = [];
@@ -48,8 +46,8 @@ function mostrarDetalhes(veiculo) {
 
 // Fechar modal
 function fecharModal() {
-  const modal = document.getElementById('modal');
-  modal.style.display = 'none';
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
 }
 
 // =============================
@@ -150,9 +148,16 @@ Sensor de ré.`
     mostrarDetalhes(veiculo);
   };
 
-  window.onclick = e => {
+  window.addEventListener("click", function(e) {
     if (e.target === modal) fecharModal();
-  };
+  });
 
   renderVeiculos();
+});
+
+// Fechar modal ao tocar fora
+document.getElementById("modal").addEventListener("touchstart", function(e) {
+    if (e.target === this) {
+        fecharModal();
+    }
 });
