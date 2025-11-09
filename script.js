@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ano: 2024,
       preco: 500000,
       imagens: [
-        '/Carros/Q5/Q5.png',
-        '/Carros/Q5/Captura de tela 2025-11-09 095805.png'
+        './Carros/Q5/Q5.png',
+        './Carros/Q5/Captura de tela 2025-11-09 095805.png'
       ],
       descricao: `Motorização Híbrida Plug-in (PHEV)
 Acabamento de painel em Black Piano
@@ -83,7 +83,7 @@ Vistoria cautelar Aprovada 100%.`
       modelo: 'HRV EX 1.8',
       ano: 2021,
       preco: 200000,
-      imagens: ['/Carros/HRV/HVR.png'],
+      imagens: ['./Carros/HRV/HVR.png'],
       descricao: `Controle de tração e estabilidade.
 Banco de couro.
 Sensor de ré.`
@@ -94,7 +94,7 @@ Sensor de ré.`
       modelo: 'Cruze Premiere Turbo',
       ano: 2020,
       preco: 250000,
-      imagens: ['/Carros/Chevrolet/Cruze/Captura de tela 2025-11-09 094738.png'],
+      imagens: ['./Carros/Chevrolet/Cruze/Captura de tela 2025-11-09 094738.png'],
       descricao: 'Cautelar 100% Aprovada. Completo, sem detalhes.'
     },
     {
@@ -103,7 +103,7 @@ Sensor de ré.`
       modelo: 'Jetta TSI 2.0T',
       ano: 2013,
       preco: 250000,
-      imagens: ['/Carros/VW/Jetta/Jetta.png'],
+      imagens: ['./Carros/VW/Jetta/Jetta.png'],
       descricao: 'Teto solar, Bancos de couro caramelo, Revisões em dia.'
     },
     {
@@ -112,7 +112,7 @@ Sensor de ré.`
       modelo: 'Frontier Platinum',
       ano: 2023,
       preco: 350000,
-      imagens: ['/Carros/Nissan/Frontier/Frontier.png'],
+      imagens: ['./Carros/Nissan/Frontier/Frontier.png'],
       descricao: 'Vendida.'
     }
   ];
