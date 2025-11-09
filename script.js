@@ -1,4 +1,4 @@
-/* ===== script.js ===== */
+// ===== script.js =====
 
 // Variáveis globais para o carrossel
 let imagemAtual = 0;
@@ -23,6 +23,9 @@ function mostrarDetalhes(veiculo) {
     `)
     .join('');
 
+  const mensagem = encodeURIComponent(`Olá! Tenho interesse no veículo ${veiculo.marca} ${veiculo.modelo} (${veiculo.ano}).`);
+  const linkWhatsApp = `https://wa.me/message/4KDYLFSY74OGJ1?text=${mensagem}`;
+
   modalContent.innerHTML = `
     <span class="fechar" onclick="fecharModal()">&times;</span>
     <div class="carrossel">
@@ -33,6 +36,9 @@ function mostrarDetalhes(veiculo) {
     <h2>${veiculo.marca} ${veiculo.modelo} (${veiculo.ano})</h2>
     <p class="preco">R$ ${veiculo.preco.toLocaleString('pt-BR')}</p>
     <p class="descricao">${veiculo.descricao}</p>
+    <a href="${linkWhatsApp}" target="_blank" class="btn-whatsapp">
+      💬 Tenho Interesse via WhatsApp
+    </a>
   `;
 
   modal.style.display = 'flex';
@@ -117,95 +123,36 @@ Sensor de ré.`
     }
   ];
 
-  // Elementos
   const lista = document.getElementById('listaVeiculos');
   const modal = document.getElementById('modal');
-  const interesseBtn = document.getElementById('interesseBtn');
-  const listaInteresses = document.getElementById('listaInteresses');
-
-  let veiculoSelecionado = null;
-  let interesses = JSON.parse(localStorage.getItem('interesses')) || [];
 
   // Renderizar lista de veículos
-  function renderVeiculos(filtro = {}) {
+  function renderVeiculos() {
     lista.innerHTML = '';
-    veiculos
-      .filter(v => {
-        return (!filtro.marca || v.marca === filtro.marca)
-          && (!filtro.ano || v.ano >= filtro.ano)
-          && (!filtro.preco || v.preco <= filtro.preco)
-          && (!filtro.busca || (v.modelo + v.marca).toLowerCase().includes(filtro.busca.toLowerCase()));
-      })
-      .forEach(v => {
-        const card = document.createElement('div');
-        card.className = 'veiculo';
-        card.innerHTML = `
-          <img src="${v.imagens[0]}" alt="${v.modelo}">
-          <div class="info">
-            <h3>${v.marca} ${v.modelo}</h3>
-            <p>Ano: ${v.ano}</p>
-            <p class="preco">R$ ${v.preco.toLocaleString('pt-BR')}</p>
-            <button onclick="abrirModal(${v.id})">Ver Detalhes</button>
-          </div>
-        `;
-        lista.appendChild(card);
-      });
+    veiculos.forEach(v => {
+      const card = document.createElement('div');
+      card.className = 'veiculo';
+      card.innerHTML = `
+        <img src="${v.imagens[0]}" alt="${v.modelo}">
+        <div class="info">
+          <h3>${v.marca} ${v.modelo}</h3>
+          <p>Ano: ${v.ano}</p>
+          <p class="preco">R$ ${v.preco.toLocaleString('pt-BR')}</p>
+          <button onclick="abrirModal(${v.id})">Ver Detalhes</button>
+        </div>
+      `;
+      lista.appendChild(card);
+    });
   }
 
-  // Abrir modal
   window.abrirModal = (id) => {
     const veiculo = veiculos.find(v => v.id === id);
-    veiculoSelecionado = veiculo;
     mostrarDetalhes(veiculo);
   };
 
-  // Fechar modal ao clicar fora
   window.onclick = e => {
     if (e.target === modal) fecharModal();
   };
 
-  // Adicionar aos interesses
-  interesseBtn.addEventListener('click', () => {
-    if (veiculoSelecionado && !interesses.some(i => i.id === veiculoSelecionado.id)) {
-      interesses.push(veiculoSelecionado);
-      localStorage.setItem('interesses', JSON.stringify(interesses));
-      renderInteresses();
-      alert('Veículo adicionado aos seus interesses!');
-      fecharModal();
-    }
-  });
-
-  // Renderizar lista de interesses
-  function renderInteresses() {
-    listaInteresses.innerHTML = '';
-    interesses.forEach(i => {
-      const mensagem = encodeURIComponent(`Olá! Tenho interesse no veículo ${i.marca} ${i.modelo} ${i.ano}.`);
-      const linkWhatsApp = `https://wa.me/message/4KDYLFSY74OGJ1?text=${mensagem}`;
-      
-      const li = document.createElement('li');
-      li.innerHTML = `
-        ${i.marca} ${i.modelo} - R$ ${i.preco.toLocaleString('pt-BR')}
-        <a href="${linkWhatsApp}" target="_blank" class="whatsapp-link">
-          📞 Entrar em contato
-        </a>
-      `;
-      listaInteresses.appendChild(li);
-    });
-  }
-
-  // Filtros
-  document.querySelectorAll('#busca, #filtroMarca, #filtroAno, #filtroPreco').forEach(el => {
-    el.addEventListener('input', () => {
-      renderVeiculos({
-        marca: document.getElementById('filtroMarca').value,
-        ano: document.getElementById('filtroAno').value,
-        preco: document.getElementById('filtroPreco').value,
-        busca: document.getElementById('busca').value
-      });
-    });
-  });
-
-  // Inicializa
   renderVeiculos();
-  renderInteresses();
 });
