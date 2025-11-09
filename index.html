@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romero Veiculos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Romero Veiculos</h1>
+  </header>
+
+  <section class="filtros">
+    <input type="text" id="busca" placeholder="Buscar por modelo ou marca">
+    <select id="filtroMarca">
+      <option value="">Todas as marcas</option>
+      <option value="Toyota">Toyota</option>
+      <option value="Honda">Honda</option>
+      <option value="Ford">Ford</option>
+    </select>
+    <select id="filtroAno">
+      <option value="">Ano mínimo</option>
+      <option value="2015">2015</option>
+      <option value="2018">2018</option>
+      <option value="2020">2020</option>
+    </select>
+    <select id="filtroPreco">
+      <option value="">Faixa de preço</option>
+      <option value="50000">Até R$ 50.000</option>
+      <option value="100000">Até R$ 100.000</option>
+      <option value="200000">Até R$ 200.000</option>
+    </select>
+  </section>
+
+  <main id="listaVeiculos" class="veiculos"></main>
+
+  <div id="modal" class="modal oculto">
+    <div class="modal-content">
+      <span id="fecharModal" class="fechar">&times;</span>
+      <h2 id="tituloModal"></h2>
+      <img id="imagemModal" alt="Veículo">
+      <p id="descricaoModal"></p>
+      <p id="precoModal" class="preco"></p>
+      <button id="interesseBtn">Tenho Interesse</button>
+    </div>
+  </div>
+
+  <aside class="interesses">
+    <h3>Seus Interesses</h3>
+    <ul id="listaInteresses"></ul>
+  </aside>
+
+  <footer>
+    <p>&copy; 2025 Loja de Veículos - Todos os direitos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
