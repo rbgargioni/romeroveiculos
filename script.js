@@ -1,0 +1,211 @@
+/* ===== script.js ===== */
+
+// Variáveis globais para o carrossel
+let imagemAtual = 0;
+let imagensAtuais = [];
+
+// Função para mudar imagem do carrossel
+function mudarImagem(direcao) {
+  if (!imagensAtuais.length) return;
+  imagensAtuais[imagemAtual].style.display = 'none';
+  imagemAtual = (imagemAtual + direcao + imagensAtuais.length) % imagensAtuais.length;
+  imagensAtuais[imagemAtual].style.display = 'block';
+}
+
+// Função para mostrar os detalhes do veículo
+function mostrarDetalhes(veiculo) {
+  const modal = document.getElementById('modal');
+  const modalContent = modal.querySelector('.modal-content');
+
+  const imagensHtml = veiculo.imagens
+    .map((img, index) => `
+      <img src="${img}" class="img-detalhe" style="display:${index === 0 ? 'block' : 'none'}">
+    `)
+    .join('');
+
+  modalContent.innerHTML = `
+    <span class="fechar" onclick="fecharModal()">&times;</span>
+    <div class="carrossel">
+      ${imagensHtml}
+      <button class="btn-anterior" onclick="mudarImagem(-1)">&#10094;</button>
+      <button class="btn-proximo" onclick="mudarImagem(1)">&#10095;</button>
+    </div>
+    <h2>${veiculo.marca} ${veiculo.modelo} (${veiculo.ano})</h2>
+    <p class="preco">R$ ${veiculo.preco.toLocaleString('pt-BR')}</p>
+    <p class="descricao">${veiculo.descricao}</p>
+  `;
+
+  modal.style.display = 'flex';
+  imagemAtual = 0;
+  imagensAtuais = modalContent.querySelectorAll('.img-detalhe');
+}
+
+// Fechar modal
+function fecharModal() {
+  const modal = document.getElementById('modal');
+  modal.style.display = 'none';
+}
+
+// =============================
+// Início principal
+// =============================
+document.addEventListener('DOMContentLoaded', () => {
+  const veiculos = [
+    {
+      id: 1,
+      marca: 'Audi',
+      modelo: 'Q5 Sportback',
+      ano: 2024,
+      preco: 500000,
+      imagens: [
+        '/Carros/Q5/Q5.png',
+        '/Carros/Q5/Captura de tela 2025-11-09 095805.png'
+      ],
+      descricao: `Motorização Híbrida Plug-in (PHEV)
+Acabamento de painel em Black Piano
+Banco em couro Branco com ajuste elétrico
+Multimídia com espelhamento de celular
+Possui todos sensores de segurança como:
+- Sensor de frenagem emergencial
+- Sensor de pista
+- Sensor de estacionamento frontal e traseiro
+- Alerta de colisão
+- Controle de tração e estabilidade
+- Alerta de ponto cego
+Pneus novos
+Carro impecável, sem detalhes.
+Possui manual e chave reserva.
+Vistoria cautelar Aprovada 100%.`
+    },
+    {
+      id: 2,
+      marca: 'Honda',
+      modelo: 'HRV EX 1.8',
+      ano: 2021,
+      preco: 200000,
+      imagens: ['/Carros/HRV/HVR.png'],
+      descricao: `Controle de tração e estabilidade.
+Banco de couro.
+Sensor de ré.`
+    },
+    {
+      id: 3,
+      marca: 'Chevrolet',
+      modelo: 'Cruze Premiere Turbo',
+      ano: 2020,
+      preco: 250000,
+      imagens: ['/Carros/Chevrolet/Cruze/Captura de tela 2025-11-09 094738.png'],
+      descricao: 'Cautelar 100% Aprovada. Completo, sem detalhes.'
+    },
+    {
+      id: 4,
+      marca: 'Volkswagen',
+      modelo: 'Jetta TSI 2.0T',
+      ano: 2013,
+      preco: 250000,
+      imagens: ['/Carros/VW/Jetta/Jetta.png'],
+      descricao: 'Teto solar, Bancos de couro caramelo, Revisões em dia.'
+    },
+    {
+      id: 5,
+      marca: 'Nissan',
+      modelo: 'Frontier Platinum',
+      ano: 2023,
+      preco: 350000,
+      imagens: ['/Carros/Nissan/Frontier/Frontier.png'],
+      descricao: 'Vendida.'
+    }
+  ];
+
+  // Elementos
+  const lista = document.getElementById('listaVeiculos');
+  const modal = document.getElementById('modal');
+  const interesseBtn = document.getElementById('interesseBtn');
+  const listaInteresses = document.getElementById('listaInteresses');
+
+  let veiculoSelecionado = null;
+  let interesses = JSON.parse(localStorage.getItem('interesses')) || [];
+
+  // Renderizar lista de veículos
+  function renderVeiculos(filtro = {}) {
+    lista.innerHTML = '';
+    veiculos
+      .filter(v => {
+        return (!filtro.marca || v.marca === filtro.marca)
+          && (!filtro.ano || v.ano >= filtro.ano)
+          && (!filtro.preco || v.preco <= filtro.preco)
+          && (!filtro.busca || (v.modelo + v.marca).toLowerCase().includes(filtro.busca.toLowerCase()));
+      })
+      .forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'veiculo';
+        card.innerHTML = `
+          <img src="${v.imagens[0]}" alt="${v.modelo}">
+          <div class="info">
+            <h3>${v.marca} ${v.modelo}</h3>
+            <p>Ano: ${v.ano}</p>
+            <p class="preco">R$ ${v.preco.toLocaleString('pt-BR')}</p>
+            <button onclick="abrirModal(${v.id})">Ver Detalhes</button>
+          </div>
+        `;
+        lista.appendChild(card);
+      });
+  }
+
+  // Abrir modal
+  window.abrirModal = (id) => {
+    const veiculo = veiculos.find(v => v.id === id);
+    veiculoSelecionado = veiculo;
+    mostrarDetalhes(veiculo);
+  };
+
+  // Fechar modal ao clicar fora
+  window.onclick = e => {
+    if (e.target === modal) fecharModal();
+  };
+
+  // Adicionar aos interesses
+  interesseBtn.addEventListener('click', () => {
+    if (veiculoSelecionado && !interesses.some(i => i.id === veiculoSelecionado.id)) {
+      interesses.push(veiculoSelecionado);
+      localStorage.setItem('interesses', JSON.stringify(interesses));
+      renderInteresses();
+      alert('Veículo adicionado aos seus interesses!');
+      fecharModal();
+    }
+  });
+
+  // Renderizar lista de interesses
+  function renderInteresses() {
+    listaInteresses.innerHTML = '';
+    interesses.forEach(i => {
+      const mensagem = encodeURIComponent(`Olá! Tenho interesse no veículo ${i.marca} ${i.modelo} ${i.ano}.`);
+      const linkWhatsApp = `https://wa.me/message/4KDYLFSY74OGJ1?text=${mensagem}`;
+      
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${i.marca} ${i.modelo} - R$ ${i.preco.toLocaleString('pt-BR')}
+        <a href="${linkWhatsApp}" target="_blank" class="whatsapp-link">
+          📞 Entrar em contato
+        </a>
+      `;
+      listaInteresses.appendChild(li);
+    });
+  }
+
+  // Filtros
+  document.querySelectorAll('#busca, #filtroMarca, #filtroAno, #filtroPreco').forEach(el => {
+    el.addEventListener('input', () => {
+      renderVeiculos({
+        marca: document.getElementById('filtroMarca').value,
+        ano: document.getElementById('filtroAno').value,
+        preco: document.getElementById('filtroPreco').value,
+        busca: document.getElementById('busca').value
+      });
+    });
+  });
+
+  // Inicializa
+  renderVeiculos();
+  renderInteresses();
+});
